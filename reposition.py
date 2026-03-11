@@ -155,7 +155,7 @@ def repurpose_drug_with_names(drug_id, mesh_names, data, chem_map, int_to_dis, m
     for v, idx in zip(vals, indices):
 
         mesh_id = int_to_dis[idx.item()]
-        disease_name = mesh_names.get(mesh_id, f"{mesh_id} (name not found)")
+        disease_name = mesh_names.get(mesh_id, f"{mesh_id}")
         confidence = v.item() * 100
 
         mesh_ids.append(mesh_id)
@@ -173,47 +173,86 @@ def repurpose_drug_with_names(drug_id, mesh_names, data, chem_map, int_to_dis, m
 # ===============================
 # GRAPH GENERATION
 # ===============================
-
 def generate_graphs(drug_id, mesh_ids, confidences, disease_names, all_probs):
 
-    print("\nGenerating graphs...")
+    print("\nOpening graphs in separate windows...")
 
-    # ------------------------------
-    # Top predictions bar chart
-    # ------------------------------
-
-    plt.figure()
-
-    plt.barh(mesh_ids[::-1], confidences[::-1])
-
-    plt.xlabel("Confidence (%)")
-    plt.title(f"Top Drug Repurposing Predictions for {drug_id}")
-
-    plt.tight_layout()
-    plt.savefig("top_predictions.png")
-
-    print("Saved: top_predictions.png")
-
-    # ------------------------------
-    # Score distribution
-    # ------------------------------
-
-    plt.figure()
+    import numpy as np
+    import matplotlib.pyplot as plt
 
     scores = all_probs.cpu().numpy()
 
-    plt.hist(scores, bins=50)
+    plt.style.use('seaborn-v0_8-darkgrid')
 
-    plt.xlabel("Prediction Probability")
-    plt.ylabel("Count")
-    plt.title("Distribution of Drug-Disease Prediction Scores")
+    # =================================
+    # 1️⃣ Top Prediction Bar Chart
+    # =================================
+    fig1, ax1 = plt.subplots(figsize=(9,5))
+
+    ax1.barh(mesh_ids[::-1], confidences[::-1], color="#4E79A7")
+
+    ax1.set_xlabel("Confidence (%)")
+    ax1.set_ylabel("Disease (MeSH ID)")
+    ax1.set_title(f"Top Drug Repurposing Predictions\nDrug: {drug_id}", fontsize=14)
 
     plt.tight_layout()
-    plt.savefig("confidence_distribution.png")
-
-    print("Saved: confidence_distribution.png")
+    plt.show()
 
 
+
+    # =================================
+    # 2️⃣ Confidence Distribution
+    # =================================
+    fig2, ax2 = plt.subplots(figsize=(8,5))
+
+    ax2.hist(scores, bins=40, color="#F28E2B")
+
+    ax2.set_xlabel("Prediction Probability")
+    ax2.set_ylabel("Number of Diseases")
+    ax2.set_title(f"Prediction Confidence Distribution\nDrug: {drug_id}", fontsize=14)
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+    # =================================
+    # 3️⃣ Ranking Curve
+    # =================================
+    sorted_scores = sorted(scores, reverse=True)[:50]
+
+    fig3, ax3 = plt.subplots(figsize=(8,5))
+
+    ax3.plot(sorted_scores, marker='o')
+
+    ax3.set_xlabel("Ranked Disease Index")
+    ax3.set_ylabel("Confidence Score")
+    ax3.set_title(f"Top-50 Disease Ranking Curve\nDrug: {drug_id}", fontsize=14)
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+    # =================================
+    # 4️⃣ Prediction Heatmap
+    # =================================
+    heat = np.array(confidences).reshape(1,-1)
+
+    fig4, ax4 = plt.subplots(figsize=(10,2))
+
+    im = ax4.imshow(heat, aspect="auto")
+
+    ax4.set_yticks([])
+    ax4.set_xticks(range(len(mesh_ids)))
+    ax4.set_xticklabels(mesh_ids, rotation=45)
+
+    ax4.set_title(f"Prediction Confidence Heatmap\nDrug: {drug_id}")
+
+    plt.colorbar(im)
+
+    plt.tight_layout()
+    plt.show()
 # ===============================
 # MAIN EXECUTION
 # ===============================
