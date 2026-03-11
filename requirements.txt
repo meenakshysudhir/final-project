@@ -8,6 +8,9 @@ scikit-learn>=1.2.0
 torch>=2.0.0
 torchvision
 torchaudio
+pymedtermino
+scikit-learn
+matplotlib
 
 # Graph Neural Networks
 torch-geometric>=2.3.0

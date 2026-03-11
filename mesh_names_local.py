@@ -1,0 +1,27 @@
+# mesh_names_local.py
+MESH_NAMES = {
+    "D000818": "Diabetes Mellitus",
+    "D012297": "Hypertension",
+    "D006331": "Asthma",
+    "D009369": "Alzheimer Disease",
+    "D003920": "Breast Neoplasms",
+    "D008875": "Parkinson Disease",
+    "D004194": "Hepatitis B",
+    "D012640": "Obesity",
+    "D002318": "Influenza, Human",
+    "D000073": "Anxiety Disorders",
+    "D004827": "Myocardial Infarction",
+    "D006801": "Chronic Kidney Disease",
+    "D007307": "Rheumatoid Arthritis",
+    "D006973": "Colorectal Neoplasms",
+    "D002611": "Tuberculosis",
+    "D006943": "HIV Infections",
+    "D001943": "Stroke",
+    "D008099": "Chronic Obstructive Pulmonary Disease",
+    "D007937": "Migraine Disorders",
+    "D007249": "Epilepsy",
+    "D003274": "Hepatitis C",
+    "D001523": "Leukemia",
+    "D005817": "Osteoarthritis",
+    "D000544": "Obstructive Sleep Apnea"
+}
